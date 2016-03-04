@@ -1,3 +1,8 @@
+/*
+  example.ino - Demo code for controlling all aspects of the robot.
+  Created by Team Wall-R-Us, March 4, 2016.
+*/
+
 #include <wally.h>
 
 Wally wally; // Initialize wally robot
