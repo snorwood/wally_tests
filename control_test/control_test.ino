@@ -50,6 +50,7 @@ void loop() {
   }
   
   if (wally->readButton() || (loop_time - start_time > TRIAL_TIME)){
+    wally->stop();
     state = 0;
   }
 }
