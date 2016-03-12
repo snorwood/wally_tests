@@ -134,6 +134,7 @@ int scanAndCenter(wally, limit, diff, range, timeout) {
   wally->setMotors(0, 0);
   delay(250);
 
+  counter = (int)(counter / 2);
   wally->setMotors(-rate, rate);
   while(counter > 0) {
     counter = counter - 1;
