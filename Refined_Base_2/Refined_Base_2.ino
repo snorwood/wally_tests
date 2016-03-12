@@ -18,7 +18,7 @@
 
 #include <wally.h>
 
-Wally* wally; // Initialize wally robot
+Wally* wally_object; // Initialize wally robot
 
 double readings_back[5];
 double readings_front[5];
@@ -27,7 +27,7 @@ int rate = 28;
 
 void setup() {
 //  /* Wait for Button */
-  wally = new Wally();
+  wally_object = new Wally();
   Serial.begin(115200); // Initialize serial 
   for(int i = 0;i < (sizeof(readings_back)/sizeof(double));i++) {
     readings_back[i] = 0;
@@ -35,7 +35,7 @@ void setup() {
   }
 }
 
-double filteredFront(wally) {
+double filteredFront(Wally* wally) {
   int sum = 0;
   int counter = 0;
   for(int i = 0;i < (sizeof(readings_front)/sizeof(double)) - 1;i++) {
@@ -44,7 +44,7 @@ double filteredFront(wally) {
   readings_front[(sizeof(readings_front)/sizeof(double)) - 1] = wally->readUltrasonic(0);
   for(int i = 0;i < (sizeof(readings_front)/sizeof(double)) - 1;i++) {
     if(readings_front[i] != 5) {
-      sum = sum + readings_front[i]
+      sum = sum + readings_front[i];
       counter = counter + 1;
     }
   }
@@ -55,7 +55,7 @@ double filteredFront(wally) {
   return 0;
 }
 
-double filteredBack(wally) {
+double filteredBack(Wally* wally) {
   int sum = 0;
   int counter = 0;
   for(int i = 0;i < (sizeof(readings_back)/sizeof(double)) - 1;i++) {
@@ -64,7 +64,7 @@ double filteredBack(wally) {
   readings_back[(sizeof(readings_back)/sizeof(double)) - 1] = wally->readUltrasonic(1);
   for(int i = 0;i < (sizeof(readings_back)/sizeof(double)) - 1;i++) {
     if(readings_back[i] != 5) {
-      sum = sum + readings_back[i]
+      sum = sum + readings_back[i];
       counter = counter + 1;
     }
   }
@@ -75,7 +75,7 @@ double filteredBack(wally) {
   return 0;
 }
 
-int driveToTarget(wally, limit, diff, range) {
+int driveToTarget(Wally* wally, int limit, int diff, int range) {
   int value_front = 0;
   int value_back = 0;
   wally->setMotors(0, 0);
@@ -97,7 +97,7 @@ int driveToTarget(wally, limit, diff, range) {
   return 0;
 }
 
-int scanAndCenter(wally, limit, diff, range, timeout) {
+int scanAndCenter(Wally* wally, int limit, int diff, int range, int timeout) {
   int value_front = 0;
   int value_back = 0;
   int counter = 0;
@@ -150,23 +150,23 @@ int scanAndCenter(wally, limit, diff, range, timeout) {
 
 void loop() {
   Serial.println("Wally Target Finder Test");  // Output serial string
-  wally->waitButton();
+  wally_object->waitButton();
 
   while(1) {
-    if(scanAndCenter(wally, 100, 30, 3, 10000) = 1) {
-      if(driveToTarget(wally, 30, 30, 3) = 1) {
+    if(scanAndCenter(wally_object, 100, 30, 3, 10000) == 1) {
+      if(driveToTarget(wally_object, 30, 30, 3) == 1) {
         // WOOOOOOOOOOOOOOOOOOOOOOOO
-        wally->waitButton();
+        wally_object->waitButton();
       }
     } else {
-      if (filteredFront(wally) > 50) {
-        wally->setMotors(rate, rate);
+      if (filteredFront(wally_object) > 50) {
+        wally_object->setMotors(rate, rate);
         delay(250);
-        wally->setMotors(0, 0);
+        wally_object->setMotors(0, 0);
       } else {
-        wally->setMotors(-rate, -rate);
+        wally_object->setMotors(-rate, -rate);
         delay(250);
-        wally->setMotors(0, 0);
+        wally_object->setMotors(0, 0);
       }
     }
   }
