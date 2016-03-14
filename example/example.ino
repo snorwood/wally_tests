@@ -11,6 +11,7 @@ int firstLoop = 1;
 void setup() {
 //  /* Wait for Button */
   wally = new Wally();
+  wally->calibrateAccelerometer();
   Serial.begin(115200); // Initialize serial 
 }
 
@@ -31,7 +32,9 @@ void loop() {
   Serial.print(" y=");
   Serial.print(acc.y);
   Serial.print(" z=");
-  Serial.println(acc.z);  
+  Serial.print(acc.z);
+  Serial.print(" orientation=");
+  Serial.println(wally->getOrientation(acc));  
 
   /* Drive Motors Back and Forth */
 //  wally->setMotors(50, 50);
