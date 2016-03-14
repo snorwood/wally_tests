@@ -3,6 +3,7 @@
   Created by Team Wall-R-Us, March 4, 2016.
 */
 #include "wally.h"
+#include "rolling_median.h"
 #include "wally_control.h"
 
 Wally* wally;
@@ -23,6 +24,7 @@ void setup() {
 void loop() {
   /* Drive Motors Back and Forth */
   if (state == 0){
+    wally->stop();
     digitalWrite(13, HIGH);
     delay(500);
     wally->waitButton();
@@ -32,25 +34,32 @@ void loop() {
     state = 1;
   }
   
-  loop_time = micros();
+  wallyControl->update();
   if (state == 1)  {
-    wallyControl->horizontalControl(loop_time, 0);
-
-    if (wally->getOrientation(wally->readAccelerometer()) == UP){
-      state = 0;
+    wallyControl->horizontalControl(0);
+    if (wally->readUltrasonic(0) < 6){
+      wally->setMotors(25, 25);
+      delay(1000); 
+      state = 2;
     }
   }
   
-  if (state == 2) {
+  if (state == 2)  {
+    wally->setMotors(75, 75);
+//    if (wally->getOrientation(wally->readAccelerometer()) == UP){
+//      state = 0;
+//    }
+  }
+  
+  if (state == 3) {
     digitalWrite(13, LOW);
-    wallyControl->verticalControl(loop_time, 75, 0);
+    wallyControl->verticalControl(75, 0);
     delay(10000);
   } else {
     digitalWrite(13, HIGH);
   }
   
   if (wally->readButton() || (loop_time - start_time > TRIAL_TIME)){
-    wally->stop();
     state = 0;
   }
 }
