@@ -2,10 +2,6 @@
 #include <wally.h>
 #include <wally_control.h>
 
-#include <rolling_median.h>
-#include <wally.h>
-#include <wally_control.h>
-
 Wally* wally; // Initialize wally robot
 WallyControl* wally_c;
 
